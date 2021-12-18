@@ -366,6 +366,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"burger-ping@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "burger-ping@workspace:."
+  dependencies:
+    "@rollup/plugin-commonjs": ^17.0.0
+    "@rollup/plugin-node-resolve": ^11.0.0
+    "@rollup/plugin-typescript": ^8.0.0
+    "@tsconfig/svelte": ^2.0.0
+    rollup: ^2.3.4
+    rollup-plugin-css-only: ^3.1.0
+    rollup-plugin-livereload: ^2.0.0
+    rollup-plugin-svelte: ^7.0.0
+    rollup-plugin-terser: ^7.0.0
+    sirv-cli: ^1.0.0
+    svelte: ^3.0.0
+    svelte-check: ^2.0.0
+    svelte-preprocess: ^4.0.0
+    tslib: ^2.0.0
+    typescript: ^4.0.0
+  languageName: unknown
+  linkType: soft
+
 "cacache@npm:^15.2.0":
   version: 15.3.0
   resolution: "cacache@npm:15.3.0"
@@ -1786,28 +1808,6 @@ __metadata:
   checksum: 3dda818de06ebbe5b9653e07842d9479f3555ebc77e9a0280caf5a14fb877ffee9ed57007c3b78f5a6324b8dbeec648d9e97a24e2ed9fdb81ddc69ea07100f4a
   languageName: node
   linkType: hard
-
-"svelte-app@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "svelte-app@workspace:."
-  dependencies:
-    "@rollup/plugin-commonjs": ^17.0.0
-    "@rollup/plugin-node-resolve": ^11.0.0
-    "@rollup/plugin-typescript": ^8.0.0
-    "@tsconfig/svelte": ^2.0.0
-    rollup: ^2.3.4
-    rollup-plugin-css-only: ^3.1.0
-    rollup-plugin-livereload: ^2.0.0
-    rollup-plugin-svelte: ^7.0.0
-    rollup-plugin-terser: ^7.0.0
-    sirv-cli: ^1.0.0
-    svelte: ^3.0.0
-    svelte-check: ^2.0.0
-    svelte-preprocess: ^4.0.0
-    tslib: ^2.0.0
-    typescript: ^4.0.0
-  languageName: unknown
-  linkType: soft
 
 "svelte-check@npm:^2.0.0":
   version: 2.2.11
