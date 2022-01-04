@@ -11,7 +11,7 @@
             2. execute `nvm install 16.10.0` and `nvm use 16.10.0`
         - or go to `https://nodejs.org/en/download/` and download the latest node version manually
 2. Execute `corepack enable`
-4. Run `yarn init`
+4. Run `yarn install`
 
 ## Run
 
