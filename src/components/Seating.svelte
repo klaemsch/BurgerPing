@@ -1,58 +1,88 @@
 <script lang="ts">
-    import Table2 from "./furniture/Table2.svelte";
-    import Table4 from "./furniture/Table4.svelte";
+    import { TABLE_SIZE } from "../constant";
+    import TableDouble from "./furniture/Table.svelte";
     import Bar from "./furniture/Bar.svelte";
 
-    const cols = [[50, 4]];
+    // Does the svg align chairs on top and bottom of table? (false = horizontal = left and right)
+    const SVG_IS_VERTICAL = true;
+    
+    enum Direction {
+        HORIZONTAL, VERTICAL
+    }
+    // x, y, dir, disabled
+    type TableConfig = [number, number, Direction, boolean?];
 
-    const plan = [
-        { x: 0, y: 0, item: Table2 },
-    ]
+    const h = Direction.HORIZONTAL;
+    const v = Direction.VERTICAL;
+    const tableData: TableConfig[] = [
+        // top line
+        [2, 1, h],
+        [5, 1, h],
+        [8, 1, h],
+        [11, 1, h],
 
+        // left line
+        [1, 4, v],
+        [1, 7, v],
+        [1, 10, v],
+    ];
+
+    type Point = {
+        x: number;
+        y: number;
+    };
+    type Dimension = {
+        width: number;
+        height: number;
+    };
+
+    interface Table {
+        start: Point;
+        span: Dimension;
+        // Should svg be rotated 90 degrees?
+        rotate: boolean;
+        disabled: boolean;
+    }
+
+    const tables: Table[] = tableData.map(([x, y, dir, disabled]) => {
+        const isVert = (dir === Direction.VERTICAL); 
+        return {
+            start: {
+                x: isVert ? x : x - 1,
+                y: isVert ? y - 1 : y,
+            },
+            span: {
+                width: isVert ? 1 : 3,
+                height: isVert ? 3 : 1,
+            },
+            rotate: SVG_IS_VERTICAL !== isVert,
+            disabled,
+        };
+    });
+
+    const computeGridProperties = (start: Point, span: Dimension) => `
+        grid-column: ${start.x + 1} / span ${span.width};
+        grid-row: ${start.y + 1} / span ${span.height};
+    `;
 </script>
 
-<div class="grid-container">
-    {#each Array(16*16) as _, i}
-        <div class="grid-item">{i}</div>
-	{/each}
-    <div class="item1"><Table2 x={0} y={0} /></div>
-    <div class="item2"><Table2 x={0} y={0} /></div>
+<div class="flex-1 grid items-center p-3" id="grid-container" style="--cell-size: {TABLE_SIZE}px">
+    {#each tables as table}
+        <div class="flex justify-center" style={computeGridProperties(table.start, table.span)}>
+            <div class:rotated={table.rotate}>
+                <TableDouble />
+            </div>
+        </div>
+    {/each}
 </div>
 
 <style>
-    .grid-container {
-        display: grid;
-        grid-template-columns: repeat(16, min-content);
-        grid-template-rows: repeat(16, min-content);
-        padding: 10px;
+    #grid-container {
+        grid-template-columns: repeat(auto-fill, var(--cell-size));
+        grid-template-rows: repeat(auto-fill, var(--cell-size));
     }
-    .grid-item {
-        border: 1px dashed rgba(0, 0, 0, 0.8);
-        margin: 1px;
-        width: 50px;
-        height: 50px;
-        
-    }
-    .item2 {
-        grid-column: 5 / span 1;
-        grid-row: 5 / span 1;
-        border: 1px dashed rgba(0, 0, 0, 0.8);
-        margin: 1px;
-        margin: 1px;
-        width: 50px;
-        height: 50px;
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-    .item1 {
-        grid-column: 5 / span 1;
-        grid-row: 10 / span 1;
-        border: 1px dashed rgba(0, 0, 0, 0.8);
-        margin: 1px;
-        margin: 1px;
-        width: 50px;
-        height: 50px;
-        padding-left: 10px;
-        padding-right: 10px;
+
+    .rotated {
+        transform: rotate(90deg);
     }
 </style>
