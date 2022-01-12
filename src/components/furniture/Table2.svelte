@@ -8,7 +8,7 @@
     export let y: number;
 </script>
 
-<svg {x} {y}>
+<svg {x} {y} height=50 width=30>
     <Chair x={5} y={0} />
     <rect width={table} height={table} x={0} y={10} rx={2} ry={2} class="table" />
     <Chair x={5} y={40} />
