@@ -14,19 +14,64 @@
 
     const h = Direction.HORIZONTAL;
     const v = Direction.VERTICAL;
+
+    const lineV = (start: Point, count: number, direction: Direction = h): TableConfig[] => {
+        const factor = direction === v ? 3 : 1;
+        return Array(count).fill(0).map((_, i) => [start.x, start.y + i * factor, direction]);
+    }
+
+    const lineH = (start: Point, count: number, direction: Direction = v): TableConfig[] => {
+        const factor = direction === v ? 1 : 3;
+        return Array(count).fill(0).map((_, i) => [start.x + i * factor, start.y, direction]);
+    }
+
+    // Creates two vertically aligned double tables with spacing in between.
+    const doubleWithSpace = (start: Point, direction: Direction): TableConfig[] => {
+        const isVert = direction === v;
+        const line = isVert ? lineV : lineH;
+        return [
+            ...line(start, 2),
+            ...line({ x: start.x + (isVert ? 0 : 4), y: start.y + (isVert ? 4 : 0) }, 2)
+        ]
+    }
+
     const tableData: TableConfig[] = [
+        // === Inside ===
+
         // top line
-        [2, 1, h],
-        [5, 1, h],
-        [8, 1, h],
-        [11, 1, h],
+        ...lineH({ x: 2, y: 1}, 4, h),
 
         // left line
-        [1, 4, v],
-        [1, 7, v],
-        [1, 10, v],
-    ];
+        ...lineV({ x: 1, y: 4}, 3, v),
 
+        // middle top line
+        ...doubleWithSpace({ x: 6, y: 6}, h),
+        ...doubleWithSpace({ x: 12, y: 6}, h),
+        
+        // middle bottom line
+        ...doubleWithSpace({ x: 6, y: 9}, h),
+        ...doubleWithSpace({ x: 12, y: 9}, h),
+        
+        // bottom line
+        ...lineH({ x: 7, y: 12 }, 4, h),
+        
+        // left
+        ...doubleWithSpace({ x: 22, y: 6}, h),
+        ...doubleWithSpace({ x: 22, y: 9}, h),
+        
+        ...lineH({ x: 23, y: 12}, 2, h),
+        
+        // === Outside ===
+        // left line
+        ...lineV({ x: 1, y: 16}, 2, v),
+        ...lineV({ x: 5, y: 16}, 2, v),
+        ...doubleWithSpace({ x: 9, y: 15}, v),
+        ...doubleWithSpace({ x: 14, y: 15}, v),
+        
+        ...lineV({ x: 18, y: 16}, 2, v),
+        ...doubleWithSpace({ x: 24, y: 15}, v),
+    ];
+    
     type Point = {
         x: number;
         y: number;
