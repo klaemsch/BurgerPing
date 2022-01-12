@@ -1952,11 +1952,11 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[6] = list[i];
+    	child_ctx[9] = list[i];
     	return child_ctx;
     }
 
-    // (46:4) {#each tables as table}
+    // (79:4) {#each tables as table}
     function create_each_block(ctx) {
     	let div1;
     	let div0;
@@ -1972,11 +1972,11 @@ var app = (function () {
     			create_component(tabledouble.$$.fragment);
     			t = space();
     			attr_dev(div0, "class", "svelte-jfioeh");
-    			toggle_class(div0, "rotated", /*table*/ ctx[6].rotate);
-    			add_location(div0, file$1, 47, 12, 1536);
+    			toggle_class(div0, "rotated", /*table*/ ctx[9].rotate);
+    			add_location(div0, file$1, 80, 12, 2966);
     			attr_dev(div1, "class", "flex justify-center");
-    			attr_dev(div1, "style", /*computeGridProperties*/ ctx[1](/*table*/ ctx[6].start, /*table*/ ctx[6].span));
-    			add_location(div1, file$1, 46, 8, 1434);
+    			attr_dev(div1, "style", /*computeGridProperties*/ ctx[1](/*table*/ ctx[9].start, /*table*/ ctx[9].span));
+    			add_location(div1, file$1, 79, 8, 2864);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -2005,7 +2005,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(46:4) {#each tables as table}",
+    		source: "(79:4) {#each tables as table}",
     		ctx
     	});
 
@@ -2038,7 +2038,7 @@ var app = (function () {
     			attr_dev(div, "class", "flex-1 grid items-center p-3 svelte-jfioeh");
     			attr_dev(div, "id", "grid-container");
     			set_style(div, "--cell-size", TABLE_SIZE + "px");
-    			add_location(div, file$1, 44, 0, 1297);
+    			add_location(div, file$1, 77, 0, 2727);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2131,16 +2131,59 @@ var app = (function () {
     	const h = Direction.HORIZONTAL;
     	const v = Direction.VERTICAL;
 
+    	const lineV = (start, count, direction = h) => {
+    		const factor = direction === v ? 3 : 1;
+    		return Array(count).fill(0).map((_, i) => [start.x, start.y + i * factor, direction]);
+    	};
+
+    	const lineH = (start, count, direction = v) => {
+    		const factor = direction === v ? 1 : 3;
+    		return Array(count).fill(0).map((_, i) => [start.x + i * factor, start.y, direction]);
+    	};
+
+    	// Creates two vertically aligned double tables with spacing in between.
+    	const doubleWithSpace = (start, direction) => {
+    		const isVert = direction === v;
+    		const line = isVert ? lineV : lineH;
+
+    		return [
+    			...line(start, 2),
+    			...line(
+    				{
+    					x: start.x + (isVert ? 0 : 4),
+    					y: start.y + (isVert ? 4 : 0)
+    				},
+    				2
+    			)
+    		];
+    	};
+
     	const tableData = [
+    		// === Inside ===
     		// top line
-    		[2, 1, h],
-    		[5, 1, h],
-    		[8, 1, h],
-    		[11, 1, h],
+    		...lineH({ x: 2, y: 1 }, 4, h),
     		// left line
-    		[1, 4, v],
-    		[1, 7, v],
-    		[1, 10, v]
+    		...lineV({ x: 1, y: 4 }, 3, v),
+    		// middle top line
+    		...doubleWithSpace({ x: 6, y: 6 }, h),
+    		...doubleWithSpace({ x: 12, y: 6 }, h),
+    		// middle bottom line
+    		...doubleWithSpace({ x: 6, y: 9 }, h),
+    		...doubleWithSpace({ x: 12, y: 9 }, h),
+    		// bottom line
+    		...lineH({ x: 7, y: 12 }, 4, h),
+    		// left
+    		...doubleWithSpace({ x: 22, y: 6 }, h),
+    		...doubleWithSpace({ x: 22, y: 9 }, h),
+    		...lineH({ x: 23, y: 12 }, 2, h),
+    		// === Outside ===
+    		// left line
+    		...lineV({ x: 1, y: 16 }, 2, v),
+    		...lineV({ x: 5, y: 16 }, 2, v),
+    		...doubleWithSpace({ x: 9, y: 15 }, v),
+    		...doubleWithSpace({ x: 14, y: 15 }, v),
+    		...lineV({ x: 18, y: 16 }, 2, v),
+    		...doubleWithSpace({ x: 24, y: 15 }, v)
     	];
 
     	const tables = tableData.map(([x, y, dir, disabled]) => {
@@ -2178,6 +2221,9 @@ var app = (function () {
     		Direction,
     		h,
     		v,
+    		lineV,
+    		lineH,
+    		doubleWithSpace,
     		tableData,
     		tables,
     		computeGridProperties
