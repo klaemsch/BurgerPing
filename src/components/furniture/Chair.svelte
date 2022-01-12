@@ -3,6 +3,8 @@
 
     export let x: number;
     export let y: number;
+    export let highlighted: boolean = false;
+    export let disabled: boolean = false;
 </script>
 
 <rect
@@ -13,4 +15,16 @@
     rx={2}
     ry={2}
     class="chair"
+    class:highlighted
+    class:disabled
 />
+
+<style>
+    .highlighted {
+        @apply fill-indigo-500 cursor-pointer;
+    }
+
+    .disabled {
+        @apply fill-gray-400 cursor-not-allowed;
+    }
+</style>

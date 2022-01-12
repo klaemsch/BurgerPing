@@ -3,6 +3,11 @@
     import TableDouble from "./furniture/Table.svelte";
     import Bar from "./furniture/Bar.svelte";
 
+    export let selected: number[];
+    export let onSelected: (index: number) => void;
+
+    const randomlyDisable = () => Math.random() > 0.9;
+
     // Does the svg align chairs on top and bottom of table? (false = horizontal = left and right)
     const SVG_IS_VERTICAL = true;
     
@@ -17,12 +22,12 @@
 
     const lineV = (start: Point, count: number, direction: Direction = h): TableConfig[] => {
         const factor = direction === v ? 3 : 1;
-        return Array(count).fill(0).map((_, i) => [start.x, start.y + i * factor, direction]);
+        return Array(count).fill(0).map((_, i) => [start.x, start.y + i * factor, direction, randomlyDisable()]);
     }
 
     const lineH = (start: Point, count: number, direction: Direction = v): TableConfig[] => {
         const factor = direction === v ? 1 : 3;
-        return Array(count).fill(0).map((_, i) => [start.x + i * factor, start.y, direction]);
+        return Array(count).fill(0).map((_, i) => [start.x + i * factor, start.y, direction, randomlyDisable()]);
     }
 
     // Creates two vertically aligned double tables with spacing in between.
@@ -109,13 +114,25 @@
         grid-column: ${start.x + 1} / span ${span.width};
         grid-row: ${start.y + 1} / span ${span.height};
     `;
+
+    let hoverIndex = null;
+
+    const hover = (index: number) => () => {
+        hoverIndex = index;
+    }
+
+    const unhover = (index: number) => () => {
+        if (index === hoverIndex) {
+            hoverIndex = null;
+        }
+    }
 </script>
 
 <div class="flex-1 grid items-center p-3" id="grid-container" style="--cell-size: {TABLE_SIZE}px">
-    {#each tables as table}
+    {#each tables as table, i}
         <div class="flex justify-center" style={computeGridProperties(table.start, table.span)}>
-            <div class:rotated={table.rotate}>
-                <TableDouble />
+            <div class:rotated={table.rotate} on:mouseenter={hover(i)} on:mouseleave={unhover(i)} on:click={() => onSelected(i)}>
+                <TableDouble highlighted={hoverIndex === i} selected={selected.findIndex((s) => s === i) > -1} disabled={table.disabled} />
             </div>
         </div>
     {/each}
