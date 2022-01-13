@@ -6,8 +6,16 @@
     import NumberInput from "./input/NumberInput.svelte";
     import EmailInput from "./input/EmailInput.svelte";
     import Collapsable from "./Collapsable.svelte";
+    import DishPicker from "./input/DishPicker.svelte";
+    import Button from "./input/Button.svelte";
 
     export let personCount: number;
+    export let dishCount: number;
+    let dish: string = "";
+
+    function clickHandler() {
+        alert("Deine Reservation war erfolgreich!");
+    }
 
     let currentIndex: number = 1;
 
@@ -40,7 +48,17 @@
         {clickCallback}
         index={2}
     >
-        <h1>LOL</h1>
+        <Text>Essensauswahl (optional)</Text>
+        <div class="flex gap-5">
+            <DishPicker label="Menü" />
+            <NumberInput
+                label="Anzahl"
+                bind:value={dishCount}
+                min={1}
+                max={10}
+                placeholder="1"
+            />
+        </div>
     </Collapsable>
 
     <Collapsable
@@ -55,4 +73,5 @@
             placeholder="maximilian.erhardt@stud.uni-hannover.de"
         />
     </Collapsable>
+    <Button label="Bestätigen" onclick={clickHandler} />
 </div>

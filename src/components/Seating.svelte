@@ -2,6 +2,8 @@
     import { TABLE_SIZE } from "../constant";
     import TableDouble from "./furniture/Table.svelte";
     import Bar from "./furniture/Bar.svelte";
+    import createPanZoom from 'panzoom';
+    import { onMount } from "svelte";
     
     export let selected: number[];
     export let onSelected: (index: number) => void;
@@ -173,9 +175,15 @@
             hoverIndex = null;
         }
     }
+
+    let container;
+    onMount(() => {
+        const handle = createPanZoom(container);
+    });
+
 </script>
 
-<div class="flex-1 grid items-center p-3" id="grid-container" style="--cell-size: {TABLE_SIZE}px">
+<div class="grid items-center p-3" id="grid-container" style="--cell-size: {TABLE_SIZE}px" bind:this={container}>
 
     <div class="bar">
         <Bar x={0} y={0}/>
@@ -195,6 +203,9 @@
 
 <style>
     #grid-container {
+        width: 1000px;
+        height: 1000px;
+
         grid-template-columns: repeat(auto-fill, var(--cell-size));
         grid-template-rows: repeat(auto-fill, var(--cell-size));
     }
