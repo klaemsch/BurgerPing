@@ -24,7 +24,7 @@
 <main class="flex flex-col h-screen">
 	<Header />
 	<div class="flex flex-row flex-1">
-		<div class="flex flex-1 bg-gray-100">
+		<div class="flex flex-1 bg-gray-100 overflow-hidden">
 			<SeatingPlan {selected} onSelected={handleSelection} />
 		</div>
 		<div class="flex flex-1"><Panel bind:personCount /></div>
