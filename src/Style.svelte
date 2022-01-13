@@ -10,14 +10,4 @@
         padding: 0;
       }
     }
-
-    @layer components {
-      .table {
-          @apply fill-orange-300
-      }
-
-      .chair {
-        @apply fill-orange-800
-      }
-  }
 </style>

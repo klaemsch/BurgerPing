@@ -8,7 +8,7 @@
 </script>
 
 <svg width={TABLE_SIZE} height={TABLE_SIZE + 2 * CHAIR_HEIGHT}>
-    <Chair x={5} y={0} {highlighted} {disabled} />
+    <Chair x={5} y={0} {highlighted} {selected} {disabled} />
     <rect
         width={TABLE_SIZE}
         height={TABLE_SIZE}
@@ -16,21 +16,21 @@
         y={10}
         rx={2}
         ry={2}
-        class="table"
+        class="fill-orange-300 cursor-pointer"
         class:highlighted
         class:selected
         class:disabled
     />
-    <Chair x={5} y={40} {highlighted} {disabled}/>
+    <Chair x={5} y={40} {highlighted} {selected} {disabled}/>
 </svg>
 
 <style>
-    .highlighted {
-        @apply fill-indigo-300 cursor-pointer;
+    .highlighted, .selected {
+        @apply fill-indigo-300;
     }
 
     .selected {
-        @apply fill-red-500;
+        @apply fill-indigo-400;
     }
 
     .disabled {

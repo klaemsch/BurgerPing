@@ -8,17 +8,6 @@
 	let dishCount = 1;
 	let selected: number[] = [];
 
-	const handleSelection = (index: number) => {
-		const i = selected.findIndex((s) => s === index);
-		if(i > -1) {
-			// Removes item from selected list if it has already been selected before
-			selected = [...selected.slice(0, i), ...selected.slice(i + 1)];
-			return;
-		}
-		// number of tables the visitor is allowed to select based on person count
-		const tableCount = Math.ceil(personCount / 2);
-		selected = [...selected.slice(selected.length+1-tableCount), index];
-	}
 </script>
 
 <GlobalStyle />
@@ -26,8 +15,8 @@
 	<Header />
 	<div class="flex flex-row flex-1">
 		<div class="flex flex-1 bg-gray-100 overflow-hidden">
-			<SeatingPlan {selected} onSelected={handleSelection} />
+			<SeatingPlan bind:selected {personCount} />
 		</div>
-		<div class="flex flex-1"><Panel bind:personCount={personCount} bind:dishCount={dishCount} /></div>
+		<div class="flex flex-1"><Panel bind:personCount bind:dishCount selectionCount={selected.length} /></div>
 	</div>
 </main>

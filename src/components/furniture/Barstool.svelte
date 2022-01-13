@@ -3,4 +3,4 @@
     export let y: number;
 </script>
 
-<circle cx={x} cy={y} r={10} class="chair" />
+<circle cx={x} cy={y} r={10} class="fill-orange-400" />

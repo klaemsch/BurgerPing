@@ -4,6 +4,7 @@
     export let x: number;
     export let y: number;
     export let highlighted: boolean = false;
+    export let selected: boolean = false;
     export let disabled: boolean = false;
 </script>
 
@@ -14,14 +15,15 @@
     {y}
     rx={2}
     ry={2}
-    class="chair"
+    class="fill-orange-400 cursor-pointer"
     class:highlighted
+    class:selected
     class:disabled
 />
 
 <style>
-    .highlighted {
-        @apply fill-indigo-500 cursor-pointer;
+    .highlighted, .selected {
+        @apply fill-indigo-500;
     }
 
     .disabled {

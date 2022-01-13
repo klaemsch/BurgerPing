@@ -2,23 +2,47 @@
     import { TABLE_SIZE } from "../constant";
     import TableDouble from "./furniture/Table.svelte";
     import Bar from "./furniture/Bar.svelte";
-    import createPanZoom from 'panzoom';
+    import createPanZoom from "panzoom";
     import { onMount } from "svelte";
-    
+
     export let selected: number[];
-    export let onSelected: (index: number) => void;
+    export let personCount: number;
+
+    const handleSelection = (index: number) => {
+        const isDisabled = tableData[index][3] === true;
+        if (isDisabled) return;
+
+        const i = selected.findIndex((s) => s === index);
+        if (i > -1) {
+            // Removes item from selected list if it has already been selected before
+            selected = [...selected.slice(0, i), ...selected.slice(i + 1)];
+            return;
+        }
+
+        selected = [...selected, index];
+    };
+
+    // number of tables the visitor is allowed to select based on person count
+    $: tableCount = Math.ceil(personCount / 2)
     
+    $: {
+        console.log(`tableCount: ${tableCount}`);
+        selected = selected.slice(-tableCount);
+        console.log(`Selection length: ${selected.length}`);
+    }
+
     const randomlyDisable = () => Math.random() > 0.9;
-    
+
     // Does the svg align chairs on top and bottom of table? (false = horizontal = left and right)
     const SVG_IS_VERTICAL = true;
-    
+
     enum Direction {
-        HORIZONTAL, VERTICAL
+        HORIZONTAL,
+        VERTICAL,
     }
     // x, y, dir, disabled
     type TableConfig = [number, number, Direction, boolean?];
-    
+
     type Point = {
         x: number;
         y: number;
@@ -30,11 +54,11 @@
 
     const h = Direction.HORIZONTAL;
     const v = Direction.VERTICAL;
-    
+
     // Creates vertical line of tables. The indivual tables are aligned based on `direction`.
     // The upper-most table (marked as `Y` in drawing below) will be placed at the specified starting point
     // If direction is vertical, one free space is added between each table
-    // 
+    //
     // (count: 4, direction: horitonal):
     //  oYo
     //  oXo
@@ -50,27 +74,49 @@
     //  X
     //  o
     //
-    const lineV = (start: Point, count: number, direction: Direction = h): TableConfig[] => {
+    const lineV = (
+        start: Point,
+        count: number,
+        direction: Direction = h
+    ): TableConfig[] => {
         const factor = direction === v ? 3 : 1;
-        return Array(count).fill(0).map((_, i) => [start.x, start.y + i * factor, direction, randomlyDisable()]);
-    }
-    
+        return Array(count)
+            .fill(0)
+            .map((_, i) => [
+                start.x,
+                start.y + i * factor,
+                direction,
+                randomlyDisable(),
+            ]);
+    };
+
     // Creates horizontal line of tables. The indivual tables are aligned based on `direction`
     // The left-most table (marked as `Y` in drawing below) will be placed at the specified starting point
     // If direction is horizontal, one free space is added between each table.
     //
     // (count: 4, direction: vertical):
-    //  o o o o 
+    //  o o o o
     //  Y|X|X|X
     //  o o o o
     //
     // (count: 4, direction: horizontal):
     //  oYo | oXo | oXo | oXo
     //
-    const lineH = (start: Point, count: number, direction: Direction = v): TableConfig[] => {
+    const lineH = (
+        start: Point,
+        count: number,
+        direction: Direction = v
+    ): TableConfig[] => {
         const factor = direction === v ? 1 : 3;
-        return Array(count).fill(0).map((_, i) => [start.x + i * factor, start.y, direction, randomlyDisable()]);
-    }
+        return Array(count)
+            .fill(0)
+            .map((_, i) => [
+                start.x + i * factor,
+                start.y,
+                direction,
+                randomlyDisable(),
+            ]);
+    };
 
     // Creates two double tables (á 2 spaces) with 2 free spaces in between (6x3 spaces total).
     // The left-most table (marked as `Y` in drawing below) will be placed at the specified starting point
@@ -80,60 +126,68 @@
     //  o o     o o  3
     //
     //  1 2 3 4 5 6
-    // 
+    //
     // If direction is set to VERTICAL, the same description applies with x and y being flipped
     // and the top-most table being placed at the starting point
     //
-    const doubleWithSpace = (start: Point, direction: Direction): TableConfig[] => {
+    const doubleWithSpace = (
+        start: Point,
+        direction: Direction
+    ): TableConfig[] => {
         const isVert = direction === v;
         const line = isVert ? lineV : lineH;
         return [
             ...line(start, 2),
-            ...line({ x: start.x + (isVert ? 0 : 4), y: start.y + (isVert ? 4 : 0) }, 2)
-        ]
-    }
+            ...line(
+                {
+                    x: start.x + (isVert ? 0 : 4),
+                    y: start.y + (isVert ? 4 : 0),
+                },
+                2
+            ),
+        ];
+    };
 
     const tableData: TableConfig[] = [
         // === Inside ===
 
         // top line
-        ...lineH({ x: 1, y: 1}, 4, h),
+        ...lineH({ x: 1, y: 1 }, 4, h),
 
         // left
-        ...lineV({ x: 1, y: 4}, 3, v),
+        ...lineV({ x: 1, y: 4 }, 3, v),
 
         // middle top
-        ...doubleWithSpace({ x: 6, y: 6}, h),
-        ...doubleWithSpace({ x: 12, y: 6}, h),
-        
+        ...doubleWithSpace({ x: 6, y: 6 }, h),
+        ...doubleWithSpace({ x: 12, y: 6 }, h),
+
         // middle bottom
-        ...doubleWithSpace({ x: 6, y: 9}, h),
-        ...doubleWithSpace({ x: 12, y: 9}, h),
-        
+        ...doubleWithSpace({ x: 6, y: 9 }, h),
+        ...doubleWithSpace({ x: 12, y: 9 }, h),
+
         // bottom
         ...lineH({ x: 7, y: 12 }, 4, h),
-        
+
         // right
-        ...doubleWithSpace({ x: 22, y: 6}, h),
-        ...doubleWithSpace({ x: 22, y: 9}, h),
-        
-        ...lineH({ x: 23, y: 12}, 2, h),
-        
+        ...doubleWithSpace({ x: 22, y: 6 }, h),
+        ...doubleWithSpace({ x: 22, y: 9 }, h),
+
+        ...lineH({ x: 23, y: 12 }, 2, h),
+
         // === Outside ===
 
         // left
-        ...lineV({ x: 1, y: 16}, 2, v),
-        ...lineV({ x: 5, y: 16}, 2, v),
+        ...lineV({ x: 1, y: 16 }, 2, v),
+        ...lineV({ x: 5, y: 16 }, 2, v),
 
         // center
-        ...doubleWithSpace({ x: 9, y: 15}, v),
-        ...doubleWithSpace({ x: 14, y: 15}, v),
-        
+        ...doubleWithSpace({ x: 9, y: 15 }, v),
+        ...doubleWithSpace({ x: 14, y: 15 }, v),
+
         // right
-        ...lineV({ x: 18, y: 16}, 2, v),
-        ...doubleWithSpace({ x: 24, y: 15}, v),
+        ...lineV({ x: 18, y: 16 }, 2, v),
+        ...doubleWithSpace({ x: 24, y: 15 }, v),
     ];
-    
 
     interface Table {
         start: Point;
@@ -144,7 +198,7 @@
     }
 
     const tables: Table[] = tableData.map(([x, y, dir, disabled]) => {
-        const isVert = (dir === Direction.VERTICAL); 
+        const isVert = dir === Direction.VERTICAL;
         return {
             start: {
                 x: isVert ? x : x - 1,
@@ -168,34 +222,49 @@
 
     const hover = (index: number) => () => {
         hoverIndex = index;
-    }
+    };
 
     const unhover = (index: number) => () => {
         if (index === hoverIndex) {
             hoverIndex = null;
         }
-    }
+    };
 
     let container;
     onMount(() => {
         const handle = createPanZoom(container);
     });
-
 </script>
 
-<div class="grid items-center p-3" id="grid-container" style="--cell-size: {TABLE_SIZE}px" bind:this={container}>
-
+<div
+    class="grid items-center p-3"
+    id="grid-container"
+    style="--cell-size: {TABLE_SIZE}px"
+    bind:this={container}
+>
     <div class="bar">
-        <Bar x={0} y={0}/>
+        <Bar x={0} y={0} />
     </div>
 
-    <div class="wall" style="grid-column: 1 / 32; grid-row: 1 / 14;"></div>
-    <div class="wall" style="grid-column: 1 / 13; grid-row: 1 / 14;"></div>
+    <div class="wall" style="grid-column: 1 / 32; grid-row: 1 / 14;" />
+    <div class="wall" style="grid-column: 1 / 13; grid-row: 1 / 14;" />
 
     {#each tables as table, i}
-        <div class="flex justify-center" style={computeGridProperties(table.start, table.span)}>
-            <div class:rotated={table.rotate} on:mouseenter={hover(i)} on:mouseleave={unhover(i)} on:click={() => onSelected(i)}>
-                <TableDouble highlighted={hoverIndex === i} selected={selected.findIndex((s) => s === i) > -1} disabled={table.disabled} />
+        <div
+            class="flex justify-center"
+            style={computeGridProperties(table.start, table.span)}
+        >
+            <div
+                class:rotated={table.rotate}
+                on:mouseenter={hover(i)}
+                on:mouseleave={unhover(i)}
+                on:click={() => handleSelection(i)}
+            >
+                <TableDouble
+                    highlighted={hoverIndex === i}
+                    selected={selected.findIndex((s) => s === i) > -1}
+                    disabled={table.disabled}
+                />
             </div>
         </div>
     {/each}
