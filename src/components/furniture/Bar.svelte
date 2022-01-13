@@ -5,7 +5,7 @@
     export let y: number;
 </script>
 
-<svg {x} {y}>
+<svg {x} {y} height=70 width=190>
     <rect x={160} y={0} width={30} height={60} class="table" />
     <rect x={0} y={30} width={190} height={30} class="table" />
     <Barstool x={10} y={60} />
