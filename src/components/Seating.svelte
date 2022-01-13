@@ -96,8 +96,8 @@
     const tableData: TableConfig[] = [
         // === Inside ===
 
-        // top
-        ...lineH({ x: 2, y: 1}, 4, h),
+        // top line
+        ...lineH({ x: 1, y: 1}, 4, h),
 
         // left
         ...lineV({ x: 1, y: 4}, 3, v),
@@ -184,6 +184,14 @@
 </script>
 
 <div class="grid items-center p-3" id="grid-container" style="--cell-size: {TABLE_SIZE}px" bind:this={container}>
+
+    <div class="bar">
+        <Bar x={0} y={0}/>
+    </div>
+
+    <div class="wall" style="grid-column: 1 / 32; grid-row: 1 / 14;"></div>
+    <div class="wall" style="grid-column: 1 / 13; grid-row: 1 / 14;"></div>
+
     {#each tables as table, i}
         <div class="flex justify-center" style={computeGridProperties(table.start, table.span)}>
             <div class:rotated={table.rotate} on:mouseenter={hover(i)} on:mouseleave={unhover(i)} on:click={() => onSelected(i)}>
@@ -204,5 +212,16 @@
 
     .rotated {
         transform: rotate(90deg);
+    }
+
+    .bar {
+        grid-column: 19 / span 7;
+        grid-row: 1 / span 3;
+        align-self: stretch;
+    }
+
+    .wall {
+        border: 2px solid grey;
+        align-self: stretch;
     }
 </style>
