@@ -12,7 +12,7 @@
     import Collapsable from './Collapsable.svelte';
 
     export let personCount: number;
-    export let dishCount: number;
+    export let dishCount: number[] = [0, 0, 0];
     export let selectionCount: number;
     let dish: string = '';
 	
@@ -47,22 +47,12 @@
     </Collapsable>
 
     <Collapsable
-        label="Essensauswahl"
+        label="Essensauswahl (optional)"
         visible={currentIndex === 2}
         {clickCallback}
         index={2}
     >
-        <Text>Essensauswahl (optional)</Text>
-        <div class="flex gap-5">
-            <DishPicker label="Menü" />
-            <NumberInput
-                label="Anzahl"
-                bind:value={dishCount}
-                min={1}
-                max={10}
-                placeholder="1"
-            />
-        </div>
+        <DishPicker bind:dishCount={dishCount}/>
     </Collapsable>
 
     <Collapsable

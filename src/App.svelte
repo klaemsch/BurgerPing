@@ -5,7 +5,7 @@
 	import SeatingPlan from "./components/Seating.svelte";
 
 	let personCount = 1;
-	let dishCount = 1;
+	let dishCount = [0, 0, 0];
 	let selected: number[] = [];
 
 </script>
