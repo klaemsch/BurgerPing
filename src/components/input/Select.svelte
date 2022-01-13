@@ -14,7 +14,7 @@
     <select
         id="select"
         name="select"
-        class="font-sans focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 bg-transparent text-gray-500 text-sm border-gray-300 rounded-md"
+        class="font-sans focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 bg-transparent text-gray-500 text-sm border-gray-300 rounded-md cursor-pointer"
     >
         {#each options as option}
                 <option value={option.value} selected={option.value === selected}>
