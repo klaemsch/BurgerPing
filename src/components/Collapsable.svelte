@@ -29,8 +29,13 @@
 
 </script>
 
-<div class="block rounded-md placeholder-gray-300 cursor-pointer" on:click={collapse}>
-    <Text bold>{label}</Text>
+<div class="flex flex-row rounded-md placeholder-gray-300 cursor-pointer hover:text-gray-500 justify-between items-center px-5" on:click={collapse}>
+    <Text bold>
+        {label}
+    </Text>
+    <svg width="16" height="16" style="transform: scale(200%);">
+        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+    </svg>
 </div>
 
 <div class="content" bind:this={content} style={visible ? test : "display: none"}>
@@ -41,7 +46,7 @@
 
 <style>
     .content {
-        padding: 0 18px;
+        padding: 0 30px;
         overflow: hidden;
     }
 </style>
