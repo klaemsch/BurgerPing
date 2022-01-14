@@ -1,20 +1,8 @@
 <script lang="ts">
-    export let extraStyle: boolean = false;
-    const extra: string = "font-sans extra";
     export let bold = false;
+    export let extra: string = "";
 </script>
 
-<p class={extraStyle ? extra : `font-sans ${bold ? "font-bold" : ""}`}>
+<p class="font-sans {bold ? "font-bold" : ""} {extra}">
     <slot></slot>
 </p>
-
-<style>
-
-    .extra {
-        padding-right: 1rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-</style>

@@ -1,9 +1,15 @@
 <script lang="ts">
+    import { onMount } from "svelte";
+    import createPanZoom, { PanZoom } from "panzoom";
+
     import { TABLE_SIZE } from "../constant";
+    import Text from './typography/Text.svelte';
     import TableDouble from "./furniture/Table.svelte";
     import Bar from "./furniture/Bar.svelte";
-    import createPanZoom from "panzoom";
-    import { onMount } from "svelte";
+    import Plus from "./icons/Plus.svelte";
+    import Minus from "./icons/Minus.svelte";
+    import Move from "./icons/Move.svelte";
+import Annotation from "./typography/Annotation.svelte";
 
     export let selected: number[];
     export let personCount: number;
@@ -23,8 +29,8 @@
     };
 
     // number of tables the visitor is allowed to select based on person count
-    $: tableCount = Math.ceil(personCount / 2)
-    
+    $: tableCount = Math.ceil(personCount / 2);
+
     $: {
         console.log(`tableCount: ${tableCount}`);
         selected = selected.slice(-tableCount);
@@ -230,51 +236,99 @@
         }
     };
 
+    const cells = Array(31 * 22).fill(0);
+
     let container;
+    let handle: PanZoom;
     onMount(() => {
-        const handle = createPanZoom(container);
+        handle = createPanZoom(container, {
+            minZoom: 0.5,
+            maxZoom: 2,
+            bounds: true,
+            zoomDoubleClickSpeed: 1,
+            zoomSpeed: 0.5,
+        });
     });
+
+    const zoomIn = () => {
+        handle.zoomTo(400, 200, 1.2);
+    }
+    const zoomOut = () => {
+        handle.zoomTo(400, 200, 0.8);
+    }
 </script>
 
-<div
-    class="grid items-center p-3"
-    id="grid-container"
-    style="--cell-size: {TABLE_SIZE}px"
-    bind:this={container}
->
-    <div class="bar">
-        <Bar x={0} y={0} />
-    </div>
-
-    <div class="wall" style="grid-column: 1 / 32; grid-row: 1 / 14;" />
-    <div class="wall" style="grid-column: 1 / 13; grid-row: 1 / 14;" />
-
-    {#each tables as table, i}
-        <div
-            class="flex justify-center"
-            style={computeGridProperties(table.start, table.span)}
-        >
+<div class="flex flex-1 bg-gray-50 overflow-hidden inner-shadow outline-none relative">
+    <div
+        class="grid items-center p-3 w-full"
+        id="grid-container"
+        style="--cell-size: {TABLE_SIZE}px"
+        bind:this={container}
+    >
+        {#each cells as _, i}
             <div
-                class:rotated={table.rotate}
-                on:mouseenter={hover(i)}
-                on:mouseleave={unhover(i)}
-                on:click={() => handleSelection(i)}
+                class="border-l-2 border-t-2 border-indigo-50 self-stretch pointer-events-none"
+                style={computeGridProperties(
+                    { x: i % 31, y: Math.floor(i / 31) },
+                    { width: 1, height: 1 }
+                )}
+            />
+        {/each}
+        <div class="wall" style="grid-column: 1 / 32; grid-row: 1 / 14;" />
+        <div class="wall" style="grid-column: 1 / 13; grid-row: 1 / 14;" />
+        <div class="bar">
+            <Bar x={0} y={0} />
+        </div>
+        <div
+            class="door-v"
+            style="grid-column: 12 / span 2; grid-row: 4 / span 2;"
+        />
+        <div
+            class="door-h"
+            style="grid-column: 4 / span 2; grid-row: 13 / span 2;"
+        />
+        <div
+            class="door-h"
+            style="grid-column: 20 / span 2; grid-row: 13 / span 2;"
+        />
+        {#each tables as table, i}
+            <div
+                class="flex justify-center"
+                style={computeGridProperties(table.start, table.span)}
             >
-                <TableDouble
-                    highlighted={hoverIndex === i}
-                    selected={selected.findIndex((s) => s === i) > -1}
-                    disabled={table.disabled}
-                />
+                <div
+                    class:rotated={table.rotate}
+                    on:mouseenter={hover(i)}
+                    on:mouseleave={unhover(i)}
+                    on:click={() => handleSelection(i)}
+                >
+                    <TableDouble
+                        highlighted={hoverIndex === i}
+                        selected={selected.findIndex((s) => s === i) > -1}
+                        disabled={table.disabled}
+                    />
+                </div>
+            </div>
+        {/each}
+    </div>
+    <div class="flex flex-row gap-5 absolute bottom-5 right-5">
+        <div class="flex flex-row gap-3 p-2 bg-white border-2 border-l-0 border-gray-100 rounded-r-md items-center cursor-pointer" on:click={() => {}}>
+            <Move />
+            <Annotation>Editieren</Annotation>
+        </div>
+        <div class="flex flex-row rounded-md shadow-sm cursor-pointer">
+            <div class="p-2 bg-white border-2 border-gray-100 rounded-l-md" on:click={zoomIn}>
+                <Plus />
+            </div>
+            <div class="p-2 bg-white border-2 border-l-0 border-gray-100 rounded-r-md" on:click={zoomOut}>
+                <Minus />
             </div>
         </div>
-    {/each}
+    </div>
 </div>
 
 <style>
     #grid-container {
-        width: 1000px;
-        height: 1000px;
-
         grid-template-columns: repeat(auto-fill, var(--cell-size));
         grid-template-rows: repeat(auto-fill, var(--cell-size));
     }
@@ -293,4 +347,23 @@
         border: 2px solid grey;
         align-self: stretch;
     }
+
+    .door-v {
+        background-color: gray;
+        align-self: stretch;
+        justify-self: center;
+        width: 10px;
+        @apply rounded-sm;
+    }
+    .door-h {
+        background-color: gray;
+        align-self: center;
+        justify-self: stretch;
+        height: 10px;
+        @apply rounded-sm;
+    }
+
+    .inner-shadow {
+		box-shadow: 0px 0px 15px 3px rgba(0, 0, 0, 0.03) inset; 
+	}
 </style>
