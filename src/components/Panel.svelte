@@ -13,27 +13,39 @@
     export let personCount: number;
     export let dishCount: number[] = [0, 0, 0];
     export let selectionCount: number;
+    let date = new Date();
+    let hour: string;
+    let minutes: string;
 
-    function clickHandler() {
+    let name: string;
+    let email: string;
+
+    const showConfirmation = () => {
         alert("Deine Reservation war erfolgreich!");
-    }
+    };
 
     let currentIndex: number = 1;
 
-    function clickCallback(index: number) {
+    const clickCallback = (index: number) => {
         if (currentIndex === index) {
             currentIndex = 0;
             return;
         }
         currentIndex = index;
-    }
+    };
+
+    $: isValid =
+        date !== null &&
+        hour !== null &&
+        minutes !== null &&
+        personCount > 0 &&
+        personCount < 11 &&
+        name !== "" &&
+        email !== "";
 </script>
 
 <div class="flex flex-col justify-between p-10 border-l-2 border-gray-100">
-    <div
-        class="flex flex-col gap-5 items-stretch"
-        style="width: 600px"
-    >
+    <div class="flex flex-col gap-5 items-stretch" style="width: 600px">
         <Collapsable
             label="Termin"
             visible={currentIndex === 1}
@@ -41,8 +53,12 @@
             index={1}
         >
             <div class="flex flex-col gap-4">
-                <DatePicker label="Datum" />
-                <TimePicker label="Uhrzeit" />
+                <DatePicker label="Datum" bind:date />
+                <TimePicker
+                    label="Uhrzeit"
+                    bind:selectedHour={hour}
+                    bind:selectedMinutes={minutes}
+                />
                 <NumberInput
                     label="Personen"
                     bind:value={personCount}
@@ -73,13 +89,30 @@
             index={3}
         >
             <div class="flex flex-col gap-4">
-                <TextInput label="Name" placeholder="Maximilian Erhardt" />
+                <TextInput
+                    label="Name"
+                    placeholder="Maximilian Erhardt"
+                    bind:value={name}
+                />
                 <EmailInput
                     label="Email"
                     placeholder="maximilian.erhardt@stud.uni-hannover.de"
+                    bind:value={email}
                 />
             </div>
         </Collapsable>
     </div>
-    <Button label="Bestätigen" onclick={clickHandler} />
+    <div class="flex flex-col gap-3">
+        <Button
+            label="Bestätigen"
+            onclick={showConfirmation}
+            disabled={!isValid}
+        />
+        <div class="flex flex-col items-center">
+            <Annotation
+                >{isValid ? `${name}(${email}), ${date.toLocaleDateString()}@${hour}:${minutes}, ${personCount} persons` : ''}&nbsp;</Annotation
+            >
+
+        </div>
+    </div>
 </div>

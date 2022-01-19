@@ -33,9 +33,13 @@
 
     const minutes = ["00", "15", "30", "45"];
 
+    
     const currentDate = new Date();
     const currentHour = currentDate.getHours();
-    const currentMinute = currentDate.getMinutes();
+
+    export let selectedHour = hours[currentHour];
+    export let selectedMinutes = minutes[0];
+
 </script>
 
 <div>
@@ -45,10 +49,10 @@
         >
     {/if}
     <div class="mt-1 flex justify-left" id="s">
-        <Select options={hours.map((hour) => ({ text: hour, value: hour }))} selected={hours[currentHour]} />
+        <Select options={hours.map((hour) => ({ text: hour, value: hour }))} bind:selected={selectedHour} />
         <span class="m-2">:</span>
         <Select
-            options={minutes.map((minute) => ({ text: minute, value: minute }))}
+            options={minutes.map((minute) => ({ text: minute, value: minute }))} bind:selected={selectedMinutes}
         />
     </div>
 </div>

@@ -1,7 +1,6 @@
 <script lang="ts">
     export let label: string = null;
-
-    const today = new Date().toISOString().slice(0, 10);
+    export let date: Date;
 
 </script>
 
@@ -12,6 +11,6 @@
         >
     {/if}
     <div class="mt-1 relative rounded-md shadow-sm">
-        <input type="date" value={today} id="label" class="font-sans focus:ring-indigo-500 focus:border-indigo-500 block w-full text-sm border-gray-300 rounded-md placeholder-gray-300 cursor-pointer"/>
+        <input type="date" value={date.toISOString().slice(0, 10)} id="label" class="font-sans focus:ring-indigo-500 focus:border-indigo-500 block w-full text-sm border-gray-300 rounded-md placeholder-gray-300 cursor-pointer"/>
     </div>
 </div>
