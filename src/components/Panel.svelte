@@ -68,16 +68,6 @@
         </Collapsable>
 
         <Collapsable
-            label="Essensauswahl"
-            optional
-            visible={currentIndex === 2}
-            {clickCallback}
-            index={2}
-        >
-            <DishPicker bind:dishCount />
-        </Collapsable>
-
-        <Collapsable
             label="Kontakt"
             visible={currentIndex === 3}
             {clickCallback}
@@ -96,6 +86,17 @@
                 />
             </div>
         </Collapsable>
+
+        <Collapsable
+            label="Essensauswahl"
+            optional
+            visible={currentIndex === 2}
+            {clickCallback}
+            index={2}
+        >
+            <DishPicker bind:dishCount />
+        </Collapsable>
+
     </div>
     <div class="flex flex-col gap-3">
         <Button
