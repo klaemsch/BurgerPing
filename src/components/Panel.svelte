@@ -9,6 +9,7 @@
     import Button from "./input/Button.svelte";
     import Annotation from "./typography/Annotation.svelte";
     import Collapsable from "./Collapsable.svelte";
+	import Contact from "./typography/Contact.svelte";
 
     export let personCount: number;
     export let dishCount: number[] = [0, 0, 0];
@@ -108,4 +109,9 @@
             </Annotation>
         </div>
     </div>
+	<div>
+		<Contact label="Contact">Bei Fragen: burgerpingreservation@stud.uni-hannover.de</Contact>
+	</div>
+	
+	
 </div>
