@@ -9,7 +9,7 @@
     import Button from "./input/Button.svelte";
     import Annotation from "./typography/Annotation.svelte";
     import Collapsable from "./Collapsable.svelte";
-	import Contact from "./typography/Contact.svelte";
+    import Contact from "./typography/Contact.svelte";
 
     export let personCount: number;
     export let dishCount: number[] = [0, 0, 0];
@@ -96,7 +96,6 @@
         >
             <DishPicker bind:dishCount />
         </Collapsable>
-
     </div>
     <div class="flex flex-col gap-3">
         <Button
@@ -105,14 +104,12 @@
             disabled={!isValid}
         />
         <div class="flex flex-col items-center">
-            <Annotation>
-                {isValid ? `${name}(${email}), ${date.toLocaleDateString()}@${time}, ${personCount} persons` : ""}&nbsp;
-            </Annotation>
+            <p class="text-sm text-gray-400">
+                Bei Fragen: Schreiben Sie uns eine <a
+                    href="mailto:burgerpingreservation@stud.uni-hannover.de?subject=Reservierung"
+                    class="underline">Email</a
+                >
+            </p>
         </div>
     </div>
-	<div>
-		<Contact label="Contact">Bei Fragen: burgerpingreservation@stud.uni-hannover.de</Contact>
-	</div>
-	
-	
 </div>
