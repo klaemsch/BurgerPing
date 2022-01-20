@@ -14,8 +14,7 @@
     export let dishCount: number[] = [0, 0, 0];
     export let selectionCount: number;
     let date = new Date();
-    let hour: string;
-    let minutes: string;
+    let time: string;
 
     let name: string;
     let email: string;
@@ -36,8 +35,7 @@
 
     $: isValid =
         date !== null &&
-        hour !== null &&
-        minutes !== null &&
+        time !== null &&
         personCount > 0 &&
         personCount < 11 &&
         name !== "" &&
@@ -54,11 +52,7 @@
         >
             <div class="flex flex-col gap-4">
                 <DatePicker label="Datum" bind:date />
-                <TimePicker
-                    label="Uhrzeit"
-                    bind:selectedHour={hour}
-                    bind:selectedMinutes={minutes}
-                />
+                <TimePicker label="Uhrzeit" bind:selectedTime={time} />
                 <NumberInput
                     label="Personen"
                     bind:value={personCount}
@@ -109,10 +103,9 @@
             disabled={!isValid}
         />
         <div class="flex flex-col items-center">
-            <Annotation
-                >{isValid ? `${name}(${email}), ${date.toLocaleDateString()}@${hour}:${minutes}, ${personCount} persons` : ''}&nbsp;</Annotation
-            >
-
+            <Annotation>
+                {isValid ? `${name}(${email}), ${date.toLocaleDateString()}@${time}, ${personCount} persons` : ""}&nbsp;
+            </Annotation>
         </div>
     </div>
 </div>
