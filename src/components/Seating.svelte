@@ -10,6 +10,8 @@
     import Move from "./icons/Move.svelte";
     import Annotation from "./typography/Annotation.svelte";
     import Reset from "./icons/Reset.svelte";
+    import Check from "./icons/Check.svelte";
+    import Lock from "./icons/Lock.svelte";
 
     export let selected: number[];
     export let personCount: number;
@@ -172,7 +174,7 @@
         ];
     };
 
-    const tableData: TableConfig[] = [
+    let tableData: TableConfig[] = [
         // === Inside ===
 
         // top line
@@ -221,7 +223,8 @@
         disabled: boolean;
     }
 
-    const tables: Table[] = tableData.map(([x, y, dir, disabled]) => {
+    let tables: Table[];
+    $: tables = tableData.map(([x, y, dir, disabled]) => {
         const isVert = dir === Direction.VERTICAL;
         return {
             start: {
@@ -286,6 +289,65 @@
             zoomOut();
         }
     };
+
+    const rotateSeat = (tableID: number) => {
+        const [x, y, dir, disabled] = tableData[tableID];
+        tableData = [
+            ...tableData.slice(0, tableID),
+            [
+                x,
+                y,
+                dir === Direction.HORIZONTAL
+                    ? Direction.VERTICAL
+                    : Direction.HORIZONTAL,
+                disabled,
+            ],
+            ...tableData.slice(tableID + 1),
+        ];
+    };
+
+    const moveSeat = (tableID: number, cellPos: Point) => {
+        const [x, y, direction, disabled] = tableData[tableID];
+        tableData = [
+            ...tableData.slice(0, tableID),
+            [cellPos.x, cellPos.y, direction, disabled],
+            ...tableData.slice(tableID + 1),
+        ];
+    };
+
+    let editMode = false;
+    let draggedTableID: number = null;
+    const editPlan = () => {
+        editMode = true;
+        handle.pause();
+    };
+
+    const savePlan = () => {
+        editMode = false;
+        handle.resume();
+    };
+
+    const dragTable = (e: DragEvent, tableIndex: number) => {
+        e.dataTransfer.dropEffect = "move";
+        e.dataTransfer.setData("text", tableIndex.toString());
+        draggedTableID = tableIndex;
+        const img = new Image();
+        img.src =
+            "data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=";
+        e.dataTransfer.setDragImage(img, 0, 0);
+    };
+
+    const checkTableValidity = (e: DragEvent) => {
+        e.preventDefault();
+        console.log("checking");
+    };
+
+    const placeTable = (e: DragEvent, cellPos: Point) => {
+        if (draggedTableID === null) return;
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+        moveSeat(draggedTableID, cellPos);
+    };
 </script>
 
 <div
@@ -299,15 +361,30 @@
     >
         {#each cells as _, i}
             <div
-                class="border-l-2 border-t-2 border-indigo-50 self-stretch pointer-events-none"
+                class="border-l-2 border-t-2 border-indigo-50 self-stretch"
                 style={computeGridProperties(
                     { x: i % 31, y: Math.floor(i / 31) },
                     { width: 1, height: 1 }
                 )}
+                on:drop={(e) => {
+                    placeTable(e, { x: i % 31, y: Math.floor(i / 31) });
+                    draggedTableID = null;
+                }}
+                on:dragover={(e) => {
+                    e.preventDefault();
+                }}
+                on:dragenter={(e) =>
+                    placeTable(e, { x: i % 31, y: Math.floor(i / 31) })}
             />
         {/each}
-        <div class="wall" style="grid-column: 1 / 32; grid-row: 1 / 14;" />
-        <div class="wall" style="grid-column: 1 / 13; grid-row: 1 / 14;" />
+        <div
+            class="wall pointer-events-none"
+            style="grid-column: 1 / 32; grid-row: 1 / 14;"
+        />
+        <div
+            class="wall pointer-events-none"
+            style="grid-column: 1 / 13; grid-row: 1 / 14;"
+        />
         <div class="bar">
             <Bar x={0} y={0} />
         </div>
@@ -332,9 +409,12 @@
                     class:rotated={table.rotate}
                     on:mouseenter={hover(i)}
                     on:mouseleave={unhover(i)}
-                    on:click={() => handleSelection(i)}
+                    on:click={() =>
+                        editMode ? rotateSeat(i) : handleSelection(i)}
                     on:keydown={(e) => handleSelectionKeyWrapper(e, i)}
                     on:keyup={() => {}}
+                    on:dragstart={(e) => dragTable(e, i)}
+                    draggable={editMode}
                     tabindex="0"
                     role="button"
                     aria-pressed="false"
@@ -349,11 +429,36 @@
             </div>
         {/each}
     </div>
-    <div class="flex flex-row gap-3 absolute bottom-5 right-5 items-center">
-        {#if editable}
+    <div class="flex flex-row gap-3 absolute top-5 right-5 items-center">
+        {#if editMode}
             <div
                 class="flex flex-row gap-3 p-2 bg-white border-2 border-l-0 border-gray-100 rounded-r-md items-center cursor-pointer"
-                on:click={() => {}}
+            >
+                <Lock />
+            </div>
+        {/if}
+    </div>
+    <div class="flex flex-row gap-3 absolute bottom-5 right-5 items-center">
+        {#if editMode}
+            <div
+                class="flex flex-row gap-3 p-2 bg-white border-2 border-l-0 border-gray-100 rounded-r-md items-center cursor-pointer"
+                on:click={savePlan}
+                on:keydown={() => {}}
+                on:keyup={() => {}}
+                role="button"
+                aria-pressed="false"
+                tabindex="0"
+            >
+                <Check
+                    title="Sitzplan speichern"
+                    desc="Klicken/Enter um Sitzplan zu speichern"
+                />
+                <Annotation>Speichern</Annotation>
+            </div>
+        {:else}
+            <div
+                class="flex flex-row gap-3 p-2 bg-white border-2 border-l-0 border-gray-100 rounded-r-md items-center cursor-pointer"
+                on:click={editPlan}
                 on:keydown={() => {}}
                 on:keyup={() => {}}
                 role="button"
