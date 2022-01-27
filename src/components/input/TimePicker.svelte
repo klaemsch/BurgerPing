@@ -19,7 +19,7 @@
             type="time"
             name="a"
             id="a"
-            class="font-sans focus:ring-indigo-500 focus:border-indigo-500 block w-full text-sm border-gray-300 rounded-md placeholder-gray-300"
+            class="font-sans focus:ring-indigo-600 focus:border-indigo-600 block w-full text-sm border-gray-300 rounded-md placeholder-gray-300"
             bind:value={selectedTime}
         />
     </div>

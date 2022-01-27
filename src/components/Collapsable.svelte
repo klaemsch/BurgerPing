@@ -26,8 +26,10 @@
 </script>
 
 <div
-    class="flex flex-row rounded-md placeholder-gray-300 cursor-pointer justify-between items-center px-5"
-    on:click={collapse}
+    class="flex flex-row rounded-md placeholder-gray-300 cursor-pointer justify-between items-center px-5 select-none"
+    on:focus={collapse}
+    role="button"
+    tabindex="0"
 >
     <div class="flex flex-row gap-3 items-center">
         <Text bold extra="hover:underline">
@@ -41,10 +43,10 @@
         {#if valid}
             <Check />
         {:else}
-            <Plus />
+            <Plus title="{label} ausklappen" desc="Bereich ausklappen und Informationen anzeigen"/>
         {/if}
     {:else}
-        <Minus />
+        <Minus title="{label} einklappen" desc="Bereich einklappen und Informationen verbergen"/>
     {/if}
 </div>
 

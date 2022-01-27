@@ -12,7 +12,7 @@
     <select
         id="select"
         name="select"
-        class="font-sans focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 bg-transparent text-gray-500 text-sm border-gray-300 rounded-md cursor-pointer"
+        class="font-sans focus:ring-indigo-600 focus:border-indigo-600 h-full py-0 pl-2 pr-7 bg-transparent text-gray-500 text-sm border-gray-300 rounded-md cursor-pointer"
         bind:value={selected}
     >
         {#each options as option}

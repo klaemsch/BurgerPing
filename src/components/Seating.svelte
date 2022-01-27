@@ -14,6 +14,13 @@
     export let selected: number[];
     export let personCount: number;
 
+    const handleSelectionKeyWrapper = (event, index: number) => {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            handleSelection(index);
+        }
+    }
+
     const handleSelection = (index: number) => {
         const isDisabled = tableData[index][3] === true;
         if (isDisabled) return;
@@ -254,12 +261,18 @@
         });
     });
 
-    const zoomIn = () => {
-        handle.zoomTo(400, 200, 1.2);
-    };
-    const zoomOut = () => {
-        handle.zoomTo(400, 200, 0.8);
-    };
+    const zoomIn = (event) => {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            handle.zoomTo(400, 200, 1.2);
+        }
+    }
+    const zoomOut = (event) => {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            handle.zoomTo(400, 200, 0.8);
+        }
+    }
 </script>
 
 <div
@@ -307,22 +320,33 @@
                     on:mouseenter={hover(i)}
                     on:mouseleave={unhover(i)}
                     on:click={() => handleSelection(i)}
+                    on:keydown={(e) => handleSelectionKeyWrapper(e, i)}
+                    on:keyup={() => {}}
+                    tabindex="0"
+                    role="button"
+                    aria-pressed="false"
                 >
                     <TableDouble
                         highlighted={hoverIndex === i}
                         selected={selected.findIndex((s) => s === i) > -1}
                         disabled={table.disabled}
+                        tableID={i+1}
                     />
                 </div>
             </div>
         {/each}
     </div>
-    <div class="flex flex-row gap-3 absolute bottom-5 right-5 items-center">
+    <div class="flex flex-row gap-5 absolute bottom-5 right-5 items-center">
         <div
             class="flex flex-row gap-3 p-2 bg-white border-2 border-l-0 border-gray-100 rounded-r-md items-center cursor-pointer"
             on:click={() => {}}
+            on:keydown={() => {}}
+            on:keyup={() => {}}
+            role="button"
+            aria-pressed="false"
+            tabindex="0"
         >
-            <Move />
+            <Move title="Sitzplan bearbeiten" desc="Klicken/Enter um Sitzplan zu bearbeiten"/>
             <Annotation>Editieren</Annotation>
         </div>
         <div
@@ -336,14 +360,24 @@
             <div
                 class="p-2 bg-white border-2 border-gray-100 rounded-l-md"
                 on:click={zoomIn}
+                on:keydown={() => {}}
+                on:keyup={zoomIn}
+                role="button"
+                aria-pressed="false"
+                tabindex="0"
             >
-                <Plus />
+                <Plus title="Reinzoomen" desc="Den Sitzplan vergrößert anzeigen"/>
             </div>
-            <div
-                class="p-2 bg-white border-2 border-l-0 border-gray-100 rounded-r-md"
+            <div 
+                class="p-2 bg-white border-2 border-l-0 border-gray-100 rounded-r-md" 
                 on:click={zoomOut}
+                on:keydown={() => {}}
+                on:keyup={zoomOut}
+                role="button"
+                aria-pressed="false"
+                tabindex="0"
             >
-                <Minus />
+                <Minus title="Rauszoomen" desc="Den Sitzplan verkleinert anzeigen"/>
             </div>
         </div>
     </div>

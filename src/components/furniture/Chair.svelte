@@ -23,7 +23,7 @@
 
 <style>
     .highlighted, .selected {
-        @apply fill-indigo-500;
+        @apply fill-indigo-600;
     }
 
     .disabled {

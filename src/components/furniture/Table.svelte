@@ -5,9 +5,12 @@
     export let highlighted: boolean = false;
     export let selected: boolean = false;
     export let disabled: boolean = false;
+    export let tableID: number;
 </script>
 
-<svg width={TABLE_SIZE} height={TABLE_SIZE + 2 * CHAIR_HEIGHT}>
+<svg width={TABLE_SIZE} height={TABLE_SIZE + 2 * CHAIR_HEIGHT} role="img" aria-label="Tisch {tableID}">
+    <title>Tisch {tableID}</title>
+    <desc>Tisch, bestehend aus 2 Stühlen und einem kleinen Tisch</desc>
     <Chair x={5} y={0} {highlighted} {selected} {disabled} />
     <rect
         width={TABLE_SIZE}
