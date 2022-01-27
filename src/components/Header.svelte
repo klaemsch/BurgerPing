@@ -8,14 +8,14 @@
     const navigator = () => {
         console.log(`Label: ${label}`)
         console.log(`Path: ${window.location.pathname}`)
-        if (window.location.pathname == "/admin" || window.location.pathname == "/BurgerPing/admin") {
-            navigate("/", { replace: false });
+        if (window.location.pathname == "/BurgerPing/admin") {
+            navigate("/BurgerPing", { replace: false });
             label = "Admin";
-            console.log("Navigating to: /")
-        } else if (window.location.pathname == "/" || window.location.pathname == "/BurgerPing") {
-            navigate("/admin", { replace: false });
+            console.log("Navigating to: /BurgerPing")
+        } else if (window.location.pathname == "/BurgerPing") {
+            navigate("/BurgerPing/admin", { replace: false });
             label = "Kundenansicht";
-            console.log("Navigating to: /admin")
+            console.log("Navigating to: /BurgerPing/admin")
         } else {
             console.log("This shouldnt be possible!")
         }
