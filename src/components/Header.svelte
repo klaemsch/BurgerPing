@@ -26,6 +26,6 @@
 <header
     class="flex flex-row gap-3 items-center border-b-2 border-gray-100 p-4 justify-between"
 >
-    <img src="./burger.png" alt="BurgerPing Logo" width={50} class="rounded" />
+    <img src="https://klaemsch.github.io/BurgerPing/burger.png" alt="BurgerPing Logo" width={50} class="rounded" />
     <Button label={label} onclick={navigator} />
 </header>

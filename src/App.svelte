@@ -6,7 +6,6 @@
 	import Admin from "./pages/Admin.svelte";
 	import { onMount } from "svelte";
 
-	export let url = "localhost:5000";
 	onMount(() => {
 		navigate("/BurgerPing", { replace: false });
 	})
