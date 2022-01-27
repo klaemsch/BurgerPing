@@ -37,7 +37,14 @@
 
     const resetSelection = () => {
         selected = [];
-    };
+    }
+
+    const resetSelectionKeyWrapper = (event) => {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            resetSelection();
+        }
+    }
 
     // number of tables the visitor is allowed to select based on person count
     $: tableCount = Math.ceil(personCount / 2);
@@ -261,16 +268,22 @@
         });
     });
 
-    const zoomIn = (event) => {
+    const zoomIn = () => {
+        handle.zoomTo(400, 200, 1.2);
+    }
+    const zoomInKeyWrapper = (event) => {
         if (event.keyCode === 13) {
             event.preventDefault();
-            handle.zoomTo(400, 200, 1.2);
+            zoomIn();
         }
     }
-    const zoomOut = (event) => {
+    const zoomOut = () => {
+        handle.zoomTo(400, 200, 0.8);
+    }
+    const zoomOutKeyWrapper = (event) => {
         if (event.keyCode === 13) {
             event.preventDefault();
-            handle.zoomTo(400, 200, 0.8);
+            zoomOut();
         }
     }
 </script>
@@ -352,8 +365,13 @@
         <div
             class="flex flex-row gap-3 p-2 bg-white border-2 border-l-0 border-gray-100 rounded-r-md items-center cursor-pointer"
             on:click={resetSelection}
+            on:keydown={() => {}}
+            on:keyup={resetSelectionKeyWrapper}
+            role="button"
+            aria-pressed="false"
+            tabindex="0"
         >
-            <Reset />
+            <Reset title="Sitzplan zurücksetzen" desc="Klicken/Enter um Sitzplan zurückzusetzen"/>
             <Annotation>Zurücksetzen</Annotation>
         </div>
         <div class="flex flex-row rounded-md shadow-sm cursor-pointer">
@@ -361,7 +379,7 @@
                 class="p-2 bg-white border-2 border-gray-100 rounded-l-md"
                 on:click={zoomIn}
                 on:keydown={() => {}}
-                on:keyup={zoomIn}
+                on:keyup={zoomInKeyWrapper}
                 role="button"
                 aria-pressed="false"
                 tabindex="0"
@@ -372,7 +390,7 @@
                 class="p-2 bg-white border-2 border-l-0 border-gray-100 rounded-r-md" 
                 on:click={zoomOut}
                 on:keydown={() => {}}
-                on:keyup={zoomOut}
+                on:keyup={zoomOutKeyWrapper}
                 role="button"
                 aria-pressed="false"
                 tabindex="0"

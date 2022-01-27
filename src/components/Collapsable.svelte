@@ -41,7 +41,7 @@
     </div>
     {#if !visible}
         {#if valid}
-            <Check />
+            <Check title="Ausgefüllt" desc="Der Bereich ist komplett ausgefüllt"/>
         {:else}
             <Plus title="{label} ausklappen" desc="Bereich ausklappen und Informationen anzeigen"/>
         {/if}
