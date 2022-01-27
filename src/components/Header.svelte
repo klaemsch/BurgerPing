@@ -6,13 +6,16 @@
     let label: string = "Admin";
 
     const navigator = () => {
-        console.log(label)
-        if (window.location.pathname == "/admin") {
+        console.log(`Label: ${label}`)
+        console.log(`Path: ${window.location.pathname}`)
+        if (window.location.pathname == "/admin" || window.location.pathname == "/BurgerPing/admin") {
             navigate("/", { replace: false });
             label = "Admin";
-        } else if (window.location.pathname == "/") {
+            console.log("Navigating to: /")
+        } else if (window.location.pathname == "/" || window.location.pathname == "/BurgerPing") {
             navigate("/admin", { replace: false });
             label = "Kundenansicht";
+            console.log("Navigating to: /admin")
         } else {
             console.log("This shouldnt be possible!")
         }
