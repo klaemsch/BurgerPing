@@ -13,6 +13,7 @@
 
     export let selected: number[];
     export let personCount: number;
+    export let editable: boolean = false;
 
     const handleSelection = (index: number) => {
         const isDisabled = tableData[index][3] === true;
@@ -36,12 +37,11 @@
     $: tableCount = Math.ceil(personCount / 2);
 
     $: {
-        console.log(`tableCount: ${tableCount}`);
         selected = selected.slice(-tableCount);
-        console.log(`Selection length: ${selected.length}`);
     }
 
-    const randomlyDisable = () => Math.random() > 0.9;
+    // we don't want to disable if admin view
+    const randomlyDisable = () => (editable ? false : Math.random() > 0.9);
 
     // Does the svg align chairs on top and bottom of table? (false = horizontal = left and right)
     const SVG_IS_VERTICAL = true;
@@ -318,13 +318,15 @@
         {/each}
     </div>
     <div class="flex flex-row gap-3 absolute bottom-5 right-5 items-center">
-        <div
-            class="flex flex-row gap-3 p-2 bg-white border-2 border-l-0 border-gray-100 rounded-r-md items-center cursor-pointer"
-            on:click={() => {}}
-        >
-            <Move />
-            <Annotation>Editieren</Annotation>
-        </div>
+        {#if editable}
+            <div
+                class="flex flex-row gap-3 p-2 bg-white border-2 border-l-0 border-gray-100 rounded-r-md items-center cursor-pointer"
+                on:click={() => {}}
+            >
+                <Move />
+                <Annotation>Editieren</Annotation>
+            </div>
+        {/if}
         <div
             class="flex flex-row gap-3 p-2 bg-white border-2 border-l-0 border-gray-100 rounded-r-md items-center cursor-pointer"
             on:click={resetSelection}
