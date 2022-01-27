@@ -25,10 +25,6 @@
     let currentIndex: number = 1;
 
     const clickCallback = (index: number) => {
-        if (currentIndex === index) {
-            currentIndex = 0;
-            return;
-        }
         currentIndex = index;
     };
 
@@ -105,7 +101,7 @@
             disabled={!dateSectionIsValid || !contactSectionIsValid}
         />
         <div class="flex flex-col items-center">
-            <p class="text-sm text-gray-400">
+            <p class="text-sm text-gray-600">
                 Bei Fragen: Schreiben Sie uns eine <a
                     href="mailto:burgerpingreservation@stud.uni-hannover.de?subject=Reservierung"
                     class="underline">Email</a

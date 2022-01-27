@@ -7,7 +7,7 @@
 <button
 	on:click={onclick}
 	{disabled}
-	class="font-sans text-base bg-indigo-500 hover:bg-indigo-700 active:bg-indigo-900 text-white py-2 px-4 rounded-md h-10 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
+	class="font-sans text-base bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-900 text-white py-2 px-4 rounded-md h-10 disabled:bg-gray-200 disabled:text-gray-700 disabled:cursor-not-allowed"
 >
 	{label}
 </button>

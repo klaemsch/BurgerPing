@@ -5,7 +5,9 @@
     export let y: number;
 </script>
 
-<svg {x} {y} height=70 width=190>
+<svg {x} {y} height=70 width=190 role="img" aria-label="Bar mit 6 Barhockern">
+    <title>Bar</title>
+    <desc>Bar mit 6 Barhockern</desc>
     <Barstool x={10} y={60} />
     <Barstool x={40} y={60} />
     <Barstool x={70} y={60} />

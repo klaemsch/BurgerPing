@@ -15,6 +15,13 @@
     export let personCount: number;
     export let editable: boolean = false;
 
+    const handleSelectionKeyWrapper = (event, index: number) => {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            handleSelection(index);
+        }
+    };
+
     const handleSelection = (index: number) => {
         const isDisabled = tableData[index][3] === true;
         if (isDisabled) return;
@@ -31,6 +38,13 @@
 
     const resetSelection = () => {
         selected = [];
+    };
+
+    const resetSelectionKeyWrapper = (event) => {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            resetSelection();
+        }
     };
 
     // number of tables the visitor is allowed to select based on person count
@@ -257,8 +271,20 @@
     const zoomIn = () => {
         handle.zoomTo(400, 200, 1.2);
     };
+    const zoomInKeyWrapper = (event) => {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            zoomIn();
+        }
+    };
     const zoomOut = () => {
         handle.zoomTo(400, 200, 0.8);
+    };
+    const zoomOutKeyWrapper = (event) => {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            zoomOut();
+        }
     };
 </script>
 
@@ -307,11 +333,17 @@
                     on:mouseenter={hover(i)}
                     on:mouseleave={unhover(i)}
                     on:click={() => handleSelection(i)}
+                    on:keydown={(e) => handleSelectionKeyWrapper(e, i)}
+                    on:keyup={() => {}}
+                    tabindex="0"
+                    role="button"
+                    aria-pressed="false"
                 >
                     <TableDouble
                         highlighted={hoverIndex === i}
                         selected={selected.findIndex((s) => s === i) > -1}
                         disabled={table.disabled}
+                        tableID={i + 1}
                     />
                 </div>
             </div>
@@ -322,30 +354,62 @@
             <div
                 class="flex flex-row gap-3 p-2 bg-white border-2 border-l-0 border-gray-100 rounded-r-md items-center cursor-pointer"
                 on:click={() => {}}
+                on:keydown={() => {}}
+                on:keyup={() => {}}
+                role="button"
+                aria-pressed="false"
+                tabindex="0"
             >
-                <Move />
+                <Move
+                    title="Sitzplan bearbeiten"
+                    desc="Klicken/Enter um Sitzplan zu bearbeiten"
+                />
                 <Annotation>Editieren</Annotation>
             </div>
         {/if}
         <div
             class="flex flex-row gap-3 p-2 bg-white border-2 border-l-0 border-gray-100 rounded-r-md items-center cursor-pointer"
             on:click={resetSelection}
+            on:keydown={() => {}}
+            on:keyup={resetSelectionKeyWrapper}
+            role="button"
+            aria-pressed="false"
+            tabindex="0"
         >
-            <Reset />
+            <Reset
+                title="Sitzplan zurücksetzen"
+                desc="Klicken/Enter um Sitzplan zurückzusetzen"
+            />
             <Annotation>Zurücksetzen</Annotation>
         </div>
         <div class="flex flex-row rounded-md shadow-sm cursor-pointer">
             <div
                 class="p-2 bg-white border-2 border-gray-100 rounded-l-md"
                 on:click={zoomIn}
+                on:keydown={() => {}}
+                on:keyup={zoomInKeyWrapper}
+                role="button"
+                aria-pressed="false"
+                tabindex="0"
             >
-                <Plus />
+                <Plus
+                    title="Reinzoomen"
+                    desc="Den Sitzplan vergrößert anzeigen"
+                />
             </div>
             <div
                 class="p-2 bg-white border-2 border-l-0 border-gray-100 rounded-r-md"
                 on:click={zoomOut}
+                on:keydown={() => {}}
+                on:keyup={zoomOutKeyWrapper}
+                role="button"
+                aria-pressed="false"
+                tabindex="0"
             >
-                <Minus />
+                <Minus
+                    title="Rauszoomen"
+                    desc="Den Sitzplan verkleinert anzeigen"
+                />
             </div>
         </div>
     </div>
