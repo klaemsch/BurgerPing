@@ -31,6 +31,7 @@
   "dependencies": {
     "@tailwindcss/forms": "^0.4.0",
     "panzoom": "^9.4.2",
-    "sirv-cli": "^1.0.0"
+    "sirv-cli": "^1.0.0",
+    "svelte-routing": "^1.6.0"
   }
 }
