@@ -3,13 +3,13 @@
     import createPanZoom, { PanZoom } from "panzoom";
 
     import { TABLE_SIZE } from "../constant";
-    import Text from './typography/Text.svelte';
     import TableDouble from "./furniture/Table.svelte";
     import Bar from "./furniture/Bar.svelte";
     import Plus from "./icons/Plus.svelte";
     import Minus from "./icons/Minus.svelte";
     import Move from "./icons/Move.svelte";
-import Annotation from "./typography/Annotation.svelte";
+    import Annotation from "./typography/Annotation.svelte";
+    import Reset from "./icons/Reset.svelte";
 
     export let selected: number[];
     export let personCount: number;
@@ -26,6 +26,10 @@ import Annotation from "./typography/Annotation.svelte";
         }
 
         selected = [...selected, index];
+    };
+
+    const resetSelection = () => {
+        selected = [];
     };
 
     // number of tables the visitor is allowed to select based on person count
@@ -252,13 +256,15 @@ import Annotation from "./typography/Annotation.svelte";
 
     const zoomIn = () => {
         handle.zoomTo(400, 200, 1.2);
-    }
+    };
     const zoomOut = () => {
         handle.zoomTo(400, 200, 0.8);
-    }
+    };
 </script>
 
-<div class="flex flex-1 bg-gray-50 overflow-hidden inner-shadow outline-none relative">
+<div
+    class="flex flex-1 bg-gray-50 overflow-hidden inner-shadow outline-none relative"
+>
     <div
         class="grid items-center p-3 w-full"
         id="grid-container"
@@ -311,16 +317,32 @@ import Annotation from "./typography/Annotation.svelte";
             </div>
         {/each}
     </div>
-    <div class="flex flex-row gap-5 absolute bottom-5 right-5">
-        <div class="flex flex-row gap-3 p-2 bg-white border-2 border-l-0 border-gray-100 rounded-r-md items-center cursor-pointer" on:click={() => {}}>
+    <div class="flex flex-row gap-3 absolute bottom-5 right-5 items-center">
+        <div
+            class="flex flex-row gap-3 p-2 bg-white border-2 border-l-0 border-gray-100 rounded-r-md items-center cursor-pointer"
+            on:click={() => {}}
+        >
             <Move />
             <Annotation>Editieren</Annotation>
         </div>
+        <div
+            class="flex flex-row gap-3 p-2 bg-white border-2 border-l-0 border-gray-100 rounded-r-md items-center cursor-pointer"
+            on:click={resetSelection}
+        >
+            <Reset />
+            <Annotation>Zurücksetzen</Annotation>
+        </div>
         <div class="flex flex-row rounded-md shadow-sm cursor-pointer">
-            <div class="p-2 bg-white border-2 border-gray-100 rounded-l-md" on:click={zoomIn}>
+            <div
+                class="p-2 bg-white border-2 border-gray-100 rounded-l-md"
+                on:click={zoomIn}
+            >
                 <Plus />
             </div>
-            <div class="p-2 bg-white border-2 border-l-0 border-gray-100 rounded-r-md" on:click={zoomOut}>
+            <div
+                class="p-2 bg-white border-2 border-l-0 border-gray-100 rounded-r-md"
+                on:click={zoomOut}
+            >
                 <Minus />
             </div>
         </div>
@@ -364,6 +386,6 @@ import Annotation from "./typography/Annotation.svelte";
     }
 
     .inner-shadow {
-		box-shadow: 0px 0px 15px 3px rgba(0, 0, 0, 0.03) inset; 
-	}
+        box-shadow: 0px 0px 15px 3px rgba(0, 0, 0, 0.03) inset;
+    }
 </style>

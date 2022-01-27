@@ -3,6 +3,7 @@
     import Label from "./typography/Label.svelte";
     import Plus from "./icons/Plus.svelte";
     import Minus from "./icons/Minus.svelte";
+    import Check from "./icons/Check.svelte";
 
     // button label
     export let label: string;
@@ -10,6 +11,8 @@
 
     // start visibility
     export let visible: boolean = false;
+
+    export let valid: boolean = false;
 
     // function, gets called when the collapse button is clicked
     export let clickCallback: Function;
@@ -35,7 +38,11 @@
         {/if}
     </div>
     {#if !visible}
-        <Plus />
+        {#if valid}
+            <Check />
+        {:else}
+            <Plus />
+        {/if}
     {:else}
         <Minus />
     {/if}

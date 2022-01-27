@@ -1,5 +1,4 @@
 <script lang="ts">
-    import Text from "./typography/Text.svelte";
     import TextInput from "./input/TextInput.svelte";
     import TimePicker from "./input/TimePicker.svelte";
     import DatePicker from "./input/DatePicker.svelte";
@@ -9,7 +8,6 @@
     import Button from "./input/Button.svelte";
     import Annotation from "./typography/Annotation.svelte";
     import Collapsable from "./Collapsable.svelte";
-    import Contact from "./typography/Contact.svelte";
 
     export let personCount: number;
     export let dishCount: number[] = [0, 0, 0];
@@ -34,13 +32,12 @@
         currentIndex = index;
     };
 
-    $: isValid =
-        date !== null &&
-        time !== null &&
-        personCount > 0 &&
-        personCount < 11 &&
-        name !== "" &&
-        email !== "";
+    $: dateSectionIsValid =
+        date !== null && time !== null && personCount > 0 && personCount < 11;
+
+    $: contactSectionIsValid = name !== "" && email !== "";
+
+    $: menuSectionIsValid = dishCount.reduce((a, b) => a + b, 0) > 0;
 </script>
 
 <div class="flex flex-col justify-between p-10 border-l-2 border-gray-100">
@@ -48,6 +45,7 @@
         <Collapsable
             label="Termin"
             visible={currentIndex === 1}
+            valid={dateSectionIsValid}
             {clickCallback}
             index={1}
         >
@@ -62,7 +60,8 @@
                     placeholder="1"
                 />
                 <Annotation colored
-                    >{selectionCount}/{Math.ceil(personCount / 2)} Tische ausgewählt</Annotation
+                    >{selectionCount}/{Math.ceil(personCount / 2)} Tische ausgewählt
+                    (optional)</Annotation
                 >
             </div>
         </Collapsable>
@@ -70,6 +69,7 @@
         <Collapsable
             label="Kontakt"
             visible={currentIndex === 3}
+            valid={contactSectionIsValid}
             {clickCallback}
             index={3}
         >
@@ -91,6 +91,7 @@
             label="Essensauswahl"
             optional
             visible={currentIndex === 2}
+            valid={menuSectionIsValid}
             {clickCallback}
             index={2}
         >
@@ -101,7 +102,7 @@
         <Button
             label="Bestätigen"
             onclick={showConfirmation}
-            disabled={!isValid}
+            disabled={!dateSectionIsValid || !contactSectionIsValid}
         />
         <div class="flex flex-col items-center">
             <p class="text-sm text-gray-400">

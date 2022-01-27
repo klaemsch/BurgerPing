@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Annotation from "../typography/Annotation.svelte";
+
   export let placeholder: string;
   export let label: string;
   export let value: string = "";
