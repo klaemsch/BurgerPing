@@ -1,5 +1,13 @@
 # Burger Ping
 
+## Deployed at GitHub Pages
+https://klaemsch.github.io/BurgerPing
+
+## Dependencies
+- [@svelte](https://github.com/sveltejs/svelte)
+- [@tailwind](https://github.com/tailwindlabs/tailwindcss)
+- [@svelte-routing](https://github.com/EmilTholin/svelte-routing)
+- [@panzoom](https://github.com/anvaka/panzoom)
 
 ## Setup Node & Yarn
 1. Open console and execute `node -v`
@@ -14,5 +22,4 @@
 4. Run `yarn install`
 
 ## Run
-
 To start the dev server, type `yarn run dev`
